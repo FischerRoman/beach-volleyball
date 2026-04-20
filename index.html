@@ -88,13 +88,15 @@
   }
 
   /* FILTER */
-  .filter-bar {
+  .filter-section { margin-bottom: 32px; }
+  .filter-group {
     display: flex;
     gap: 8px;
     flex-wrap: wrap;
-    margin-bottom: 32px;
     justify-content: center;
+    margin-bottom: 10px;
   }
+  .filter-group:last-child { margin-bottom: 0; }
   .filter-label {
     font-size: 0.78rem;
     font-weight: 600;
@@ -127,6 +129,11 @@
   .filter-btn.active.mixy { background: var(--ocean); border-color: var(--ocean); }
   .filter-btn.active.zeny { background: var(--coral); border-color: var(--coral); }
   .filter-btn.active.muzi { background: #5a7faa; border-color: #5a7faa; }
+  .filter-btn.active.beach-kos { background: #1a6b8a; border-color: #1a6b8a; }
+  .filter-btn.active.vrtule { background: #2d6a37; border-color: #2d6a37; }
+  .filter-btn.active.strudl { background: #bf6000; border-color: #bf6000; }
+  .filter-btn.active.beach-vrat { background: #6a1b9a; border-color: #6a1b9a; }
+  .filter-btn.active.volny { background: #4a9e55; border-color: #4a9e55; }
 
   /* MONTH GROUP */
   .month-group { margin-bottom: 36px; }
@@ -212,6 +219,20 @@
   .tag-beach-kos { background: #dceeff; color: #1a6b8a; }
   .tag-vrtule { background: #e8f5e9; color: #2d6a37; }
   .tag-strudl { background: #fff3e0; color: #bf6000; }
+  .tag-beach-vrat { background: #f3e5f5; color: #6a1b9a; }
+
+  .day-badge {
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 20px;
+    white-space: nowrap;
+    background: #f0f0f0;
+    color: #555;
+    letter-spacing: 0.3px;
+  }
+  .day-so { background: #ede7f6; color: #4527a0; }
+  .day-ne { background: #fce4ec; color: #880e4f; }
 
   .type-badge {
     font-size: 0.72rem;
@@ -290,19 +311,6 @@
   .dot-tournament { background: var(--ocean); }
   .dot-free { background: #a8d4af; }
 
-  /* LEGEND */
-  .legend {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    justify-content: center;
-    margin-bottom: 24px;
-    font-size: 0.78rem;
-    color: var(--text-muted);
-  }
-  .legend-item { display: flex; align-items: center; gap: 5px; }
-  .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
-
   @media (max-width: 500px) {
     .date-strip { width: 90px; min-width: 90px; }
     .date-strip .day { font-size: 1.25rem; }
@@ -316,33 +324,34 @@
   <span class="hero-emoji">🏖️</span>
   <div class="season-badge">Sezona 2026</div>
   <h1>Beach <span>Liberecko</span></h1>
-  <p class="hero-sub">Přehled beachvolejbalových turnajů · Květen – Říjen</p>
+  <p class="hero-sub">Přehled beachvolejbalových turnajů · Květen – Září</p>
 </div>
 
 <div style="background: var(--sand-light); max-width: 860px; margin: 0 auto;">
 <div class="main">
 
   <!-- FILTER -->
-  <div class="filter-bar">
-    <div class="filter-label">Filtrovat podle kategorie</div>
-    <button class="filter-btn active" data-filter="all" onclick="setFilter('all', this)">Vše</button>
-    <button class="filter-btn mixy" data-filter="mixy" onclick="setFilter('mixy', this)">🤝 Mixy</button>
-    <button class="filter-btn zeny" data-filter="zeny" onclick="setFilter('zeny', this)">♀ Ženy</button>
-    <button class="filter-btn muzi" data-filter="muzi" onclick="setFilter('muzi', this)">♂ Muži</button>
+  <div class="filter-section">
+    <div class="filter-group">
+      <div class="filter-label">Kategorie</div>
+      <button class="filter-btn mixy active" onclick="toggleType('mixy', this)">🤝 Mixy</button>
+      <button class="filter-btn zeny active" onclick="toggleType('zeny', this)">♀ Ženy</button>
+      <button class="filter-btn muzi active" onclick="toggleType('muzi', this)">♂ Muži</button>
+    </div>
+    <div class="filter-group">
+      <div class="filter-label">Organizátor</div>
+      <button class="filter-btn beach-kos active" onclick="toggleOrg('beachKos', this)">Beach KOS</button>
+      <button class="filter-btn vrtule active" onclick="toggleOrg('vrtule', this)">Vrtule</button>
+      <button class="filter-btn strudl active" onclick="toggleOrg('strudl', this)">Štrůdl</button>
+      <button class="filter-btn beach-vrat active" onclick="toggleOrg('beachVratislavice', this)">Beach Vratislavice</button>
+      <button class="filter-btn volny active" onclick="toggleOrg('volny', this)">🌴 Volný víkend</button>
+    </div>
   </div>
 
   <!-- STATS -->
   <div class="stats-bar" id="statsBar">
     <div class="stat-chip"><span class="stat-dot dot-tournament"></span><span id="countTournaments">0</span> turnajů</div>
     <div class="stat-chip"><span class="stat-dot dot-free"></span><span id="countFree">0</span> volných víkendů</div>
-  </div>
-
-  <!-- LEGEND -->
-  <div class="legend">
-    <div class="legend-item"><span class="legend-dot" style="background:#1a6b8a"></span> Beach KOS</div>
-    <div class="legend-item"><span class="legend-dot" style="background:#2d6a37"></span> Vrtule</div>
-    <div class="legend-item"><span class="legend-dot" style="background:#bf6000"></span> Štrůdl Cup</div>
-    <div class="legend-item"><span class="legend-dot" style="background:#a8d4af; border: 1px dashed #2d6a37"></span> Volný víkend</div>
   </div>
 
   <!-- CALENDAR will be injected here -->
@@ -354,49 +363,8 @@
 <script>
 // ─── DATA ───────────────────────────────────────────────────────────────────
 
-const organizers = {
-  beachKos: {
-    id: 'beachKos',
-    name: 'Beach KOS',
-    tagClass: 'tag-beach-kos',
-    info: `
-      <div class="detail-row"><span class="detail-icon">⏰</span><span>Turnaje začínají v <strong>9:30</strong></span></div>
-      <div class="detail-row"><span class="detail-icon">💰</span><span>Startovné <strong>150 Kč / osobu</strong></span></div>
-      <div class="detail-row"><span class="detail-icon">📞</span><span>Přihlášky: <strong>737 155 222</strong> – Standa &nbsp;|&nbsp; <strong>608 155 885</strong> – Silva</span></div>
-      <div class="detail-row"><span class="detail-icon">📘</span><span>Aktuální info: <a href="https://www.facebook.com/beachkosmonosy" target="_blank">facebook.com/beachkosmonosy</a></span></div>
-    `
-  },
-  vrtule: {
-    id: 'vrtule',
-    name: 'Vrtule Frýdlant',
-    tagClass: 'tag-vrtule',
-    info: `
-      <div class="detail-row"><span class="detail-icon">ℹ️</span><span>Amatérská úroveň určená především pro členy spolku <strong>VRTULE FRÝDLANT</strong>. Při nenaplnění kapacity je možné přihlásit se i jako host.</span></div>
-    `
-  },
-  strudl: {
-    id: 'strudl',
-    name: 'Štrůdl Cup',
-    tagClass: 'tag-strudl',
-    info: `
-      <div class="detail-row"><span class="detail-icon">🏆</span><span>Již legendární a největší turnaj, který lze na severu zažít! Hráči všech úrovní, večer kvalitní zábava.</span></div>
-      <div class="detail-row"><span class="detail-icon">🌐</span><span><a href="https://strudlcup.cz" target="_blank">strudlcup.cz</a></span></div>
-    `
-  }
-};
-
-// Tournaments: date = Saturday (or the given date), types: mixy/zeny/muzi
-const tournaments = [
-  { date: '2026-05-30', name: 'Memoriál Standy Kose', type: 'mixy', org: 'beachKos' },
-  { date: '2026-06-01', name: 'Vrtule beach cup', type: 'mixy', org: 'vrtule' },
-  { date: '2026-06-20', name: 'Plážový volejbal', type: 'mixy', org: 'beachKos' },
-  { date: '2026-06-28', name: 'Plážový volejbal', type: 'zeny', org: 'beachKos' },
-  { date: '2026-07-04', name: 'Plážový volejbal', type: 'mixy', org: 'beachKos' },
-  { date: '2026-08-01', name: 'Plážový volejbal', type: 'zeny', org: 'beachKos' },
-  { date: '2026-08-15', name: 'Štrůdl Cup', type: 'mixy', org: 'strudl' },
-  { date: '2026-08-29', name: 'Vrtule beach cup', type: 'mixy', org: 'vrtule' },
-  { date: '2026-08-29', name: 'Plážový volejbal', type: 'mixy', org: 'beachKos' },
-];
+let organizers = {};
+let tournaments = [];
 
 // ─── WEEKEND GENERATION ──────────────────────────────────────────────────────
 
@@ -427,7 +395,8 @@ const CZ_DAYS = ['Ne','Po','Út','St','Čt','Pá','So'];
 
 // ─── RENDER ──────────────────────────────────────────────────────────────────
 
-let currentFilter = 'all';
+let selectedTypes = new Set(['mixy', 'zeny', 'muzi']);
+let selectedOrgs = new Set(['beachKos', 'vrtule', 'strudl', 'beachVratislavice', 'volny']);
 
 function typeBadge(type) {
   if (type === 'mixy') return '<span class="type-badge badge-mixy">Mixy</span>';
@@ -436,8 +405,17 @@ function typeBadge(type) {
   return '';
 }
 
-function renderCalendar(filter) {
-  const weekends = getWeekends(2026, 5, 10);
+function dayBadge(dateStr) {
+  const [y, m, d] = dateStr.split('-').map(Number);
+  const dow = new Date(y, m - 1, d).getDay(); // 0=Ne, 6=So
+  if (dow === 6) return '<span class="day-badge day-so">Sobota</span>';
+  if (dow === 0) return '<span class="day-badge day-ne">Neděle</span>';
+  const names = ['Neděle','Pondělí','Úterý','Středa','Čtvrtek','Pátek','Sobota'];
+  return `<span class="day-badge">${names[dow]}</span>`;
+}
+
+function renderCalendar() {
+  const weekends = getWeekends(2026, 5, 9);
   const tourneyMap = {};
   tournaments.forEach(t => {
     if (!tourneyMap[t.date]) tourneyMap[t.date] = [];
@@ -449,16 +427,31 @@ function renderCalendar(filter) {
   let tournamentCount = 0;
   let freeCount = 0;
 
+  const orgSet = new Set([...selectedOrgs].filter(o => o !== 'volny'));
+  const showVolny = selectedOrgs.size === 0 || selectedOrgs.has('volny');
+
   weekends.forEach(sat => {
     const key = dateKey(sat);
     const sun = new Date(sat); sun.setDate(sat.getDate() + 1);
     const month = sat.getMonth();
     const items = tourneyMap[key] || [];
+    const isTrulyFree = items.length === 0;
 
-    // Filter items
-    const filtered = filter === 'all' ? items : items.filter(t => t.type === filter);
+    let filtered;
+    let shouldShow;
+
+    if (isTrulyFree) {
+      filtered = [];
+      shouldShow = showVolny;
+    } else {
+      const typeFiltered = selectedTypes.size === 0 ? items : items.filter(t => selectedTypes.has(t.type));
+      filtered = orgSet.size === 0 ? typeFiltered : typeFiltered.filter(t => orgSet.has(t.org));
+      shouldShow = filtered.length > 0;
+    }
+
+    if (!shouldShow) return;
+
     const isFree = filtered.length === 0;
-
     if (isFree) freeCount++;
     else tournamentCount += filtered.length;
 
@@ -492,6 +485,7 @@ function renderCalendar(filter) {
           <div class="tournament-header">
             <span class="organizer-tag ${org.tagClass}">${org.name}</span>
             ${typeBadge(t.type)}
+            ${dayBadge(t.date)}
           </div>
           <div class="tournament-name">${t.name}</div>
           <button class="info-toggle" onclick="toggleInfo(this)">
@@ -519,15 +513,31 @@ function toggleInfo(btn) {
   btn.querySelector('.arrow').style.transform = btn.classList.contains('open') ? 'rotate(90deg)' : '';
 }
 
-function setFilter(type, btn) {
-  currentFilter = type;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderCalendar(type);
+function toggleType(type, btn) {
+  if (selectedTypes.has(type)) selectedTypes.delete(type);
+  else selectedTypes.add(type);
+  btn.classList.toggle('active');
+  renderCalendar();
+}
+
+function toggleOrg(org, btn) {
+  if (selectedOrgs.has(org)) selectedOrgs.delete(org);
+  else selectedOrgs.add(org);
+  btn.classList.toggle('active');
+  renderCalendar();
 }
 
 // INIT
-renderCalendar('all');
+fetch('tournaments.json')
+  .then(r => r.json())
+  .then(data => {
+    organizers = data.organizers;
+    tournaments = data.tournaments;
+    renderCalendar();
+  })
+  .catch(() => {
+    document.getElementById('calendar').innerHTML = '<p style="color:red;padding:16px">Nepodařilo se načíst data turnajů.</p>';
+  });
 </script>
 </body>
 </html>

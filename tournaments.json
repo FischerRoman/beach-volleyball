@@ -1,0 +1,46 @@
+{
+  "organizers": {
+    "beachKos": {
+      "id": "beachKos",
+      "name": "Beach KOS",
+      "tagClass": "tag-beach-kos",
+      "info": "<div class=\"detail-row\"><span class=\"detail-icon\">⏰</span><span>Turnaje začínají v <strong>9:30</strong></span></div><div class=\"detail-row\"><span class=\"detail-icon\">💰</span><span>Startovné <strong>150 Kč / osobu</strong></span></div><div class=\"detail-row\"><span class=\"detail-icon\">📞</span><span>Přihlášky: <strong>737 155 222</strong> – Standa &nbsp;|&nbsp; <strong>608 155 885</strong> – Silva</span></div><div class=\"detail-row\"><span class=\"detail-icon\">📘</span><span>Aktuální info: <a href=\"https://www.facebook.com/beachkosmonosy\" target=\"_blank\">facebook.com/beachkosmonosy</a></span></div>"
+    },
+    "vrtule": {
+      "id": "vrtule",
+      "name": "Vrtule Frýdlant",
+      "tagClass": "tag-vrtule",
+      "info": "<div class=\"detail-row\"><span class=\"detail-icon\">ℹ️</span><span>Amatérská úroveň určená především pro členy spolku <strong>VRTULE FRÝDLANT</strong>. Při nenaplnění kapacity je možné přihlásit se i jako host.</span></div>"
+    },
+    "strudl": {
+      "id": "strudl",
+      "name": "Štrůdl Cup",
+      "tagClass": "tag-strudl",
+      "info": "<div class=\"detail-row\"><span class=\"detail-icon\">🏆</span><span>Již legendární a největší turnaj, který lze na severu zažít! Hráči všech úrovní, večer kvalitní zábava.</span></div><div class=\"detail-row\"><span class=\"detail-icon\">🌐</span><span><a href=\"https://strudlcup.cz\" target=\"_blank\">strudlcup.cz</a></span></div>"
+    },
+    "beachVratislavice": {
+      "id": "beachVratislavice",
+      "name": "Beach Vratislavice",
+      "tagClass": "tag-beach-vrat",
+      "info": "<div class=\"detail-row\"><span class=\"detail-icon\">🏖️</span><span>Turnaje na kurtech ve Vratislavicích, kde je vždycky hezky a všichni se radují, když se povede pěkné prase.</span></div><div class=\"detail-row\"><span class=\"detail-icon\">💰</span><span>Startovné <strong>250 Kč / osobu</strong></span></div><div class=\"detail-row\"><span class=\"detail-icon\">🌐</span><span><a href=\"https://beachvratislavice.cz/prihlasky-na-turnaje\" target=\"_blank\">beachvratislavice.cz/prihlasky-na-turnaje</a></span></div>"
+    }
+  },
+  "tournaments": [
+    { "date": "2026-05-30", "name": "Memoriál Standy Kose", "type": "mixy", "org": "beachKos" },
+    { "date": "2026-06-27", "name": "Vrtule beach cup",      "type": "mixy", "org": "vrtule"   },
+    { "date": "2026-06-20", "name": "Plážový volejbal",      "type": "mixy", "org": "beachKos" },
+    { "date": "2026-06-27", "name": "Plážový volejbal",      "type": "zeny", "org": "beachKos" },
+    { "date": "2026-07-04", "name": "Plážový volejbal",      "type": "mixy", "org": "beachKos" },
+    { "date": "2026-08-01", "name": "Plážový volejbal",      "type": "zeny", "org": "beachKos" },
+    { "date": "2026-08-15", "name": "Štrůdl Cup",            "type": "mixy", "org": "strudl"   },
+    { "date": "2026-08-29", "name": "Vrtule beach cup",      "type": "mixy", "org": "vrtule"   },
+    { "date": "2026-08-29", "name": "Plážový volejbal",        "type": "mixy", "org": "beachKos"          },
+    { "date": "2026-05-23", "name": "Vratislavický turnaj",    "type": "mixy", "org": "beachVratislavice" },
+    { "date": "2026-06-13", "name": "Vratislavický turnaj",    "type": "zeny", "org": "beachVratislavice" },
+    { "date": "2026-06-13", "name": "Vratislavický turnaj",    "type": "muzi", "org": "beachVratislavice" },
+    { "date": "2026-06-13", "name": "Vratislavický turnaj",    "type": "mixy", "org": "beachVratislavice" },
+    { "date": "2026-09-05", "name": "Vratislavický turnaj",    "type": "zeny", "org": "beachVratislavice" },
+    { "date": "2026-09-05", "name": "Vratislavický turnaj",    "type": "muzi", "org": "beachVratislavice" },
+    { "date": "2026-09-05", "name": "Vratislavický turnaj",    "type": "mixy", "org": "beachVratislavice" }
+  ]
+}

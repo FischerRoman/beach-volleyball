@@ -68,6 +68,18 @@ Víkendy (So–Ne) se generují automaticky pro zadané měsíce – není třeb
 - [ ] Tmavý režim
 - [ ] Automatická aktualizace roku (sezona)
 
+## Lokální vývoj
+
+Server: **dotnet-serve** (nástroj pro .NET)
+
+```bash
+dotnet serve -p 5000 --open-browser
+```
+
+Stránka bude dostupná na http://localhost:5000.
+
+> Pokud `dotnet-serve` není nainstalován: `dotnet tool install -g dotnet-serve`
+
 ## Konvence
 
 - Datum vždy ve formátu `YYYY-MM-DD` (ISO 8601)
