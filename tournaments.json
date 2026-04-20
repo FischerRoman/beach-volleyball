@@ -27,7 +27,7 @@
   },
   "tournaments": [
     { "date": "2026-05-30", "name": "Memoriál Standy Kose", "type": "mixy", "org": "beachKos" },
-    { "date": "2026-06-27", "name": "Vrtule beach cup",      "type": "mixy", "org": "vrtule"   },
+    { "date": "2026-06-28", "name": "Vrtule beach cup",      "type": "mixy", "org": "vrtule"   },
     { "date": "2026-06-20", "name": "Plážový volejbal",      "type": "mixy", "org": "beachKos" },
     { "date": "2026-06-27", "name": "Plážový volejbal",      "type": "zeny", "org": "beachKos" },
     { "date": "2026-07-04", "name": "Plážový volejbal",      "type": "mixy", "org": "beachKos" },
