@@ -433,8 +433,9 @@ function renderCalendar() {
   weekends.forEach(sat => {
     const key = dateKey(sat);
     const sun = new Date(sat); sun.setDate(sat.getDate() + 1);
+    const sunKey = dateKey(sun);
     const month = sat.getMonth();
-    const items = tourneyMap[key] || [];
+    const items = [...(tourneyMap[key] || []), ...(tourneyMap[sunKey] || [])];
     const isTrulyFree = items.length === 0;
 
     let filtered;
