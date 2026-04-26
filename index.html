@@ -313,10 +313,116 @@
   .dot-tournament { background: var(--ocean); }
   .dot-free { background: #a8d4af; }
 
+  /* TOURNAMENT ACTIONS ROW */
+  .tournament-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 4px;
+    flex-wrap: wrap;
+  }
+
+  /* CALENDAR BUTTON */
+  .cal-wrap { position: relative; }
+
+  .cal-btn {
+    background: none;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem;
+    color: var(--sun);
+    cursor: pointer;
+    padding: 4px 0;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    transition: color 0.15s;
+  }
+  .cal-btn:hover { color: #c8820a; }
+  .cal-btn .cal-arrow {
+    font-size: 0.6rem;
+    opacity: 0.7;
+    transition: transform 0.2s;
+    display: inline-block;
+  }
+  .cal-btn.open .cal-arrow { transform: rotate(180deg); }
+
+  .cal-dropdown {
+    display: none;
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 0;
+    background: var(--white);
+    border-radius: var(--radius-sm);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.16), 0 2px 8px rgba(0,0,0,0.08);
+    z-index: 200;
+    overflow: hidden;
+    min-width: 220px;
+    border: 1px solid #e8e8e8;
+    animation: calFadeIn 0.15s ease;
+  }
+  @keyframes calFadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .cal-dropdown.show { display: block; }
+
+  .cal-dropdown-header {
+    padding: 8px 14px 6px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-muted);
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .cal-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 16px;
+    text-decoration: none;
+    color: var(--text-dark);
+    font-size: 0.84rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    font-family: 'DM Sans', sans-serif;
+    transition: background 0.12s;
+  }
+  .cal-option:hover { background: var(--sand-light); }
+  .cal-option + .cal-option { border-top: 1px solid #f4f4f4; }
+  .cal-option-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+  .cal-icon-google { background: #e8f0fe; }
+  .cal-icon-ics    { background: #f3e5f5; }
+  .cal-option-label { line-height: 1.2; }
+  .cal-option-label small {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    font-weight: 400;
+  }
+
   @media (max-width: 500px) {
     .date-strip { width: 90px; min-width: 90px; }
     .date-strip .day { font-size: 1.25rem; }
     .main { padding: 24px 10px 48px; }
+    .cal-dropdown { left: auto; right: 0; }
   }
 </style>
 </head>
@@ -548,6 +654,9 @@ function renderCalendar() {
     } else {
       filtered.forEach((t, idx) => {
         const org = organizers[t.org];
+        const safeDate    = escAttr(t.date);
+        const safeName    = escAttr(t.name);
+        const safeOrgName = escAttr(org.name);
         html += `<div class="tournament-item">
           <div class="tournament-header">
             <span class="organizer-tag ${org.tagClass}">${org.name}</span>
@@ -555,9 +664,30 @@ function renderCalendar() {
             ${dayBadge(t.date)}
           </div>
           <div class="tournament-name">${t.name}</div>
-          <button class="info-toggle" onclick="toggleInfo(this)">
-            <span class="arrow">▶</span> Více informací
-          </button>
+          <div class="tournament-actions">
+            <button class="info-toggle" onclick="toggleInfo(this)">
+              <span class="arrow">▶</span> Více informací
+            </button>
+            <div class="cal-wrap"
+              data-date="${safeDate}"
+              data-name="${safeName}"
+              data-orgname="${safeOrgName}">
+              <button class="cal-btn" onclick="toggleCalDropdown(this)">
+                📅 Do kalendáře <span class="cal-arrow">▼</span>
+              </button>
+              <div class="cal-dropdown">
+                <div class="cal-dropdown-header">Přidat do kalendáře</div>
+                <a class="cal-option" href="#" onclick="openGoogle(this.closest('.cal-wrap'));return false;">
+                  <span class="cal-option-icon cal-icon-google">🔵</span>
+                  <span class="cal-option-label">Google Kalendář<small>Otevře v novém okně</small></span>
+                </a>
+                <button class="cal-option" onclick="downloadICS(this.closest('.cal-wrap'))">
+                  <span class="cal-option-icon cal-icon-ics">📥</span>
+                  <span class="cal-option-label">Stáhnout .ics<small>Apple, Outlook a další</small></span>
+                </button>
+              </div>
+            </div>
+          </div>
           <div class="info-panel">${org.info}</div>
         </div>`;
       });
@@ -575,7 +705,7 @@ function renderCalendar() {
 
 function toggleInfo(btn) {
   btn.classList.toggle('open');
-  const panel = btn.nextElementSibling;
+  const panel = btn.closest('.tournament-actions').nextElementSibling;
   panel.classList.toggle('show');
   btn.querySelector('.arrow').style.transform = btn.classList.contains('open') ? 'rotate(90deg)' : '';
 }
@@ -598,6 +728,86 @@ function toggleOrg(org, btn) {
 organizers = DATA.organizers;
 tournaments = DATA.tournaments;
 renderCalendar();
+
+// ─── CALENDAR HELPERS ────────────────────────────────────────────────────────
+
+function escAttr(s) {
+  return s.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function padZ(n) { return String(n).padStart(2, '0'); }
+
+function icsDate(dateStr) { return dateStr.replace(/-/g, ''); }
+
+function icsDayAfter(dateStr) {
+  const [y, m, d] = dateStr.split('-').map(Number);
+  const nd = new Date(y, m - 1, d + 1);
+  return `${nd.getFullYear()}${padZ(nd.getMonth()+1)}${padZ(nd.getDate())}`;
+}
+
+function toggleCalDropdown(btn) {
+  const dropdown = btn.nextElementSibling;
+  const isOpen   = dropdown.classList.contains('show');
+  // close all open dropdowns
+  document.querySelectorAll('.cal-dropdown.show').forEach(d => d.classList.remove('show'));
+  document.querySelectorAll('.cal-btn.open').forEach(b => b.classList.remove('open'));
+  if (!isOpen) {
+    dropdown.classList.add('show');
+    btn.classList.add('open');
+  }
+}
+
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.cal-wrap')) {
+    document.querySelectorAll('.cal-dropdown.show').forEach(d => d.classList.remove('show'));
+    document.querySelectorAll('.cal-btn.open').forEach(b => b.classList.remove('open'));
+  }
+});
+
+function openGoogle(wrap) {
+  const { date, name, orgname } = wrap.dataset;
+  const start   = icsDate(date);
+  const end     = icsDayAfter(date);
+  const title   = encodeURIComponent(`🏐 ${name} – ${orgname}`);
+  const details = encodeURIComponent(`Beachvolejbalový turnaj\nOrganizátor: ${orgname}`);
+  window.open(
+    `https://www.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${start}/${end}&details=${details}`,
+    '_blank'
+  );
+  wrap.querySelector('.cal-dropdown').classList.remove('show');
+  wrap.querySelector('.cal-btn').classList.remove('open');
+}
+
+function downloadICS(wrap) {
+  const { date, name, orgname } = wrap.dataset;
+  const uid  = `${date}-${name.replace(/\s+/g,'-')}-${orgname.replace(/\s+/g,'-')}@beach-sever`;
+  const now  = new Date().toISOString().replace(/[-:.]/g,'').slice(0,15) + 'Z';
+  const ics  = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//Beach Volejbal na Severu//CS',
+    'CALSCALE:GREGORIAN',
+    'METHOD:PUBLISH',
+    'BEGIN:VEVENT',
+    `DTSTART;VALUE=DATE:${icsDate(date)}`,
+    `DTEND;VALUE=DATE:${icsDayAfter(date)}`,
+    `SUMMARY:🏐 ${name} – ${orgname}`,
+    `DESCRIPTION:Beachvolejbalový turnaj\\nOrganizátor: ${orgname}`,
+    `DTSTAMP:${now}`,
+    `UID:${uid}`,
+    'END:VEVENT',
+    'END:VCALENDAR'
+  ].join('\r\n');
+
+  const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+  const a    = document.createElement('a');
+  a.href     = URL.createObjectURL(blob);
+  a.download = `${name.replace(/\s+/g,'_')}_${date}.ics`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+  wrap.querySelector('.cal-dropdown').classList.remove('show');
+  wrap.querySelector('.cal-btn').classList.remove('open');
+}
 </script>
 </body>
 </html>
