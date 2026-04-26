@@ -133,6 +133,7 @@
   .filter-btn.active.vrtule { background: #2d6a37; border-color: #2d6a37; }
   .filter-btn.active.strudl { background: #bf6000; border-color: #bf6000; }
   .filter-btn.active.beach-vrat { background: #6a1b9a; border-color: #6a1b9a; }
+  .filter-btn.active.beach-turnov { background: #e65100; border-color: #e65100; }
   .filter-btn.active.volny { background: #4a9e55; border-color: #4a9e55; }
 
   /* MONTH GROUP */
@@ -220,6 +221,7 @@
   .tag-vrtule { background: #e8f5e9; color: #2d6a37; }
   .tag-strudl { background: #fff3e0; color: #bf6000; }
   .tag-beach-vrat { background: #f3e5f5; color: #6a1b9a; }
+  .tag-beach-turnov { background: #fff8e1; color: #e65100; }
 
   .day-badge {
     font-size: 0.7rem;
@@ -344,6 +346,7 @@
       <button class="filter-btn vrtule active" onclick="toggleOrg('vrtule', this)">Vrtule</button>
       <button class="filter-btn strudl active" onclick="toggleOrg('strudl', this)">Štrůdl</button>
       <button class="filter-btn beach-vrat active" onclick="toggleOrg('beachVratislavice', this)">Beach Vratislavice</button>
+      <button class="filter-btn beach-turnov active" onclick="toggleOrg('beachTurnov', this)">Beach Turnov</button>
       <button class="filter-btn volny active" onclick="toggleOrg('volny', this)">🌴 Volný víkend</button>
     </div>
   </div>
@@ -388,6 +391,12 @@ const DATA = {
       "name": "Beach Vratislavice",
       "tagClass": "tag-beach-vrat",
       "info": "<div class=\"detail-row\"><span class=\"detail-icon\">🏖️</span><span>Turnaje na kurtech ve Vratislavicích, kde je vždycky hezky a všichni se radují, když se povede pěkné prase.</span></div><div class=\"detail-row\"><span class=\"detail-icon\">💰</span><span>Startovné <strong>250 Kč / osobu</strong></span></div><div class=\"detail-row\"><span class=\"detail-icon\">🌐</span><span><a href=\"https://beachvratislavice.cz/prihlasky-na-turnaje\" target=\"_blank\">beachvratislavice.cz/prihlasky-na-turnaje</a></span></div>"
+    },
+    "beachTurnov": {
+      "id": "beachTurnov",
+      "name": "Beach Turnov",
+      "tagClass": "tag-beach-turnov",
+      "info": "<div class=\"detail-row\"><span class=\"detail-icon\">🏐</span><span>Přijďte si užít krásný den plný sportu a pohody na beachvolejbalových kurtech TJ Turnov.</span></div><div class=\"detail-row\"><span class=\"detail-icon\">📘</span><span>Aktuální info: <a href=\"https://www.facebook.com/tjturnovvolejbal\" target=\"_blank\">facebook.com/tjturnovvolejbal</a></span></div>"
     }
   },
   "tournaments": [
@@ -409,7 +418,14 @@ const DATA = {
     { "date": "2026-09-05", "name": "Vratislavický turnaj",    "type": "mixy", "org": "beachVratislavice" },
     { "date": "2026-07-25", "name": "Vratislavický turnaj",    "type": "muzi", "org": "beachVratislavice" },
     { "date": "2026-07-25", "name": "Vratislavický turnaj",    "type": "zeny", "org": "beachVratislavice" },
-    { "date": "2026-07-26", "name": "Vratislavický turnaj",    "type": "mixy", "org": "beachVratislavice" }
+    { "date": "2026-07-26", "name": "Vratislavický turnaj",    "type": "mixy", "org": "beachVratislavice" },
+    { "date": "2026-05-16", "name": "Pískohraní Vol 1",        "type": "mixy", "org": "beachTurnov"       },
+    { "date": "2026-06-06", "name": "Pískohraní Vol 2",        "type": "mixy", "org": "beachTurnov"       },
+    { "date": "2026-06-20", "name": "Turnaj žen 1",            "type": "zeny", "org": "beachTurnov"       },
+    { "date": "2026-07-18", "name": "Pískohraní Vol 3",        "type": "mixy", "org": "beachTurnov"       },
+    { "date": "2026-08-01", "name": "Pískohraní Vol 4",        "type": "mixy", "org": "beachTurnov"       },
+    { "date": "2026-08-22", "name": "Turnaj žen 2",            "type": "zeny", "org": "beachTurnov"       },
+    { "date": "2026-09-12", "name": "Pískohraní Vol 5",        "type": "mixy", "org": "beachTurnov"       }
   ]
 };
 
@@ -446,7 +462,7 @@ const CZ_DAYS = ['Ne','Po','Út','St','Čt','Pá','So'];
 // ─── RENDER ──────────────────────────────────────────────────────────────────
 
 let selectedTypes = new Set(['mixy', 'zeny', 'muzi']);
-let selectedOrgs = new Set(['beachKos', 'vrtule', 'strudl', 'beachVratislavice', 'volny']);
+let selectedOrgs = new Set(['beachKos', 'vrtule', 'strudl', 'beachVratislavice', 'beachTurnov', 'volny']);
 
 function typeBadge(type) {
   if (type === 'mixy') return '<span class="type-badge badge-mixy">Mixy</span>';
