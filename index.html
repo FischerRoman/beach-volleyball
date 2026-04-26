@@ -351,13 +351,11 @@
 
   .cal-dropdown {
     display: none;
-    position: absolute;
-    bottom: calc(100% + 8px);
-    left: 0;
+    position: fixed;
     background: var(--white);
     border-radius: var(--radius-sm);
     box-shadow: 0 8px 28px rgba(0,0,0,0.16), 0 2px 8px rgba(0,0,0,0.08);
-    z-index: 200;
+    z-index: 1000;
     overflow: hidden;
     min-width: 220px;
     border: 1px solid #e8e8e8;
@@ -422,7 +420,6 @@
     .date-strip { width: 90px; min-width: 90px; }
     .date-strip .day { font-size: 1.25rem; }
     .main { padding: 24px 10px 48px; }
-    .cal-dropdown { left: auto; right: 0; }
   }
 </style>
 </head>
@@ -675,17 +672,6 @@ function renderCalendar() {
               <button class="cal-btn" onclick="toggleCalDropdown(this)">
                 📅 Do kalendáře <span class="cal-arrow">▼</span>
               </button>
-              <div class="cal-dropdown">
-                <div class="cal-dropdown-header">Přidat do kalendáře</div>
-                <button class="cal-option" onclick="openGoogle(this.closest('.cal-wrap'))">
-                  <span class="cal-option-icon cal-icon-google">🗓</span>
-                  <span class="cal-option-label">Google Kalendář<small>Otevře v novém okně</small></span>
-                </button>
-                <button class="cal-option" onclick="downloadICS(this.closest('.cal-wrap'))">
-                  <span class="cal-option-icon cal-icon-ics">📥</span>
-                  <span class="cal-option-label">Stáhnout .ics<small>Apple, Outlook a další</small></span>
-                </button>
-              </div>
             </div>
           </div>
           <div class="info-panel">${org.info}</div>
@@ -745,27 +731,57 @@ function icsDayAfter(dateStr) {
   return `${nd.getFullYear()}${padZ(nd.getMonth()+1)}${padZ(nd.getDate())}`;
 }
 
+let currentCalBtn = null;
+
 function toggleCalDropdown(btn) {
-  const dropdown = btn.nextElementSibling;
-  const isOpen   = dropdown.classList.contains('show');
-  // close all open dropdowns
-  document.querySelectorAll('.cal-dropdown.show').forEach(d => d.classList.remove('show'));
-  document.querySelectorAll('.cal-btn.open').forEach(b => b.classList.remove('open'));
-  if (!isOpen) {
-    dropdown.classList.add('show');
-    btn.classList.add('open');
+  const portal = document.getElementById('cal-portal');
+  // Same button → close
+  if (currentCalBtn === btn && portal.classList.contains('show')) {
+    closeCalPortal();
+    return;
   }
+  // Close any previously open
+  closeCalPortal(false);
+  currentCalBtn = btn;
+  btn.classList.add('open');
+
+  // Show off-screen first to measure height
+  portal.style.top  = '-9999px';
+  portal.style.left = '-9999px';
+  portal.classList.add('show');
+
+  const btnRect = btn.getBoundingClientRect();
+  const pRect   = portal.getBoundingClientRect();
+
+  let top  = btnRect.top - pRect.height - 8;
+  let left = btnRect.left;
+
+  // Flip below if not enough space above
+  if (top < 8) top = btnRect.bottom + 8;
+  // Keep within viewport horizontally
+  if (left + pRect.width > window.innerWidth - 8) left = window.innerWidth - pRect.width - 8;
+  if (left < 8) left = 8;
+
+  portal.style.top  = top  + 'px';
+  portal.style.left = left + 'px';
+}
+
+function closeCalPortal(resetBtn = true) {
+  const portal = document.getElementById('cal-portal');
+  portal.classList.remove('show');
+  if (resetBtn && currentCalBtn) currentCalBtn.classList.remove('open');
+  currentCalBtn = null;
 }
 
 document.addEventListener('click', function(e) {
-  if (!e.target.closest('.cal-wrap')) {
-    document.querySelectorAll('.cal-dropdown.show').forEach(d => d.classList.remove('show'));
-    document.querySelectorAll('.cal-btn.open').forEach(b => b.classList.remove('open'));
+  if (!e.target.closest('.cal-wrap') && !e.target.closest('#cal-portal')) {
+    closeCalPortal();
   }
 });
 
-function openGoogle(wrap) {
-  const { date, name, orgname } = wrap.dataset;
+function openGoogle() {
+  if (!currentCalBtn) return;
+  const { date, name, orgname } = currentCalBtn.closest('.cal-wrap').dataset;
   const start   = icsDate(date);
   const end     = icsDayAfter(date);
   const title   = encodeURIComponent(`🏐 ${name} – ${orgname}`);
@@ -774,12 +790,12 @@ function openGoogle(wrap) {
     `https://www.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${start}/${end}&details=${details}`,
     '_blank'
   );
-  wrap.querySelector('.cal-dropdown').classList.remove('show');
-  wrap.querySelector('.cal-btn').classList.remove('open');
+  closeCalPortal();
 }
 
-function downloadICS(wrap) {
-  const { date, name, orgname } = wrap.dataset;
+function downloadICS() {
+  if (!currentCalBtn) return;
+  const { date, name, orgname } = currentCalBtn.closest('.cal-wrap').dataset;
   const uid  = `${date}-${name.replace(/\s+/g,'-')}-${orgname.replace(/\s+/g,'-')}@beach-sever`;
   const now  = new Date().toISOString().replace(/[-:.]/g,'').slice(0,15) + 'Z';
   const ics  = [
@@ -805,9 +821,21 @@ function downloadICS(wrap) {
   a.download = `${name.replace(/\s+/g,'_')}_${date}.ics`;
   a.click();
   URL.revokeObjectURL(a.href);
-  wrap.querySelector('.cal-dropdown').classList.remove('show');
-  wrap.querySelector('.cal-btn').classList.remove('open');
+  closeCalPortal();
 }
 </script>
+<!-- Global calendar portal – rendered outside any overflow:hidden container -->
+<div id="cal-portal" class="cal-dropdown" role="menu">
+  <div class="cal-dropdown-header">Přidat do kalendáře</div>
+  <button class="cal-option" id="cal-google-btn" onclick="openGoogle()">
+    <span class="cal-option-icon cal-icon-google">🗓</span>
+    <span class="cal-option-label">Google Kalendář<small>Otevře v novém okně</small></span>
+  </button>
+  <button class="cal-option" id="cal-ics-btn" onclick="downloadICS()">
+    <span class="cal-option-icon cal-icon-ics">📥</span>
+    <span class="cal-option-label">Stáhnout .ics<small>Apple, Outlook a další</small></span>
+  </button>
+</div>
+
 </body>
 </html>
