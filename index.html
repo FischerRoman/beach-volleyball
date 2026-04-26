@@ -677,10 +677,10 @@ function renderCalendar() {
               </button>
               <div class="cal-dropdown">
                 <div class="cal-dropdown-header">Přidat do kalendáře</div>
-                <a class="cal-option" href="#" onclick="openGoogle(this.closest('.cal-wrap'));return false;">
-                  <span class="cal-option-icon cal-icon-google">🔵</span>
+                <button class="cal-option" onclick="openGoogle(this.closest('.cal-wrap'))">
+                  <span class="cal-option-icon cal-icon-google">🗓</span>
                   <span class="cal-option-label">Google Kalendář<small>Otevře v novém okně</small></span>
-                </a>
+                </button>
                 <button class="cal-option" onclick="downloadICS(this.closest('.cal-wrap'))">
                   <span class="cal-option-icon cal-icon-ics">📥</span>
                   <span class="cal-option-label">Stáhnout .ics<small>Apple, Outlook a další</small></span>
