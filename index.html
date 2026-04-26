@@ -408,12 +408,18 @@
   }
   .cal-icon-google { background: #e8f0fe; }
   .cal-icon-ics    { background: #f3e5f5; }
+  .cal-icon-native { background: #e8f5e9; }
   .cal-option-label { line-height: 1.2; }
   .cal-option-label small {
     display: block;
     font-size: 0.7rem;
     color: var(--text-muted);
     font-weight: 400;
+  }
+
+  .cal-option-mobile { display: none; }
+  @media (hover: none) and (pointer: coarse) {
+    .cal-option-mobile { display: flex; }
   }
 
   @media (max-width: 500px) {
@@ -793,12 +799,10 @@ function openGoogle() {
   closeCalPortal();
 }
 
-function downloadICS() {
-  if (!currentCalBtn) return;
-  const { date, name, orgname } = currentCalBtn.closest('.cal-wrap').dataset;
-  const uid  = `${date}-${name.replace(/\s+/g,'-')}-${orgname.replace(/\s+/g,'-')}@beach-sever`;
-  const now  = new Date().toISOString().replace(/[-:.]/g,'').slice(0,15) + 'Z';
-  const ics  = [
+function buildICS(date, name, orgname) {
+  const uid = `${date}-${name.replace(/\s+/g,'-')}-${orgname.replace(/\s+/g,'-')}@beach-sever`;
+  const now = new Date().toISOString().replace(/[-:.]/g,'').slice(0,15) + 'Z';
+  return [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
     'PRODID:-//Beach Volejbal na Severu//CS',
@@ -814,13 +818,28 @@ function downloadICS() {
     'END:VEVENT',
     'END:VCALENDAR'
   ].join('\r\n');
+}
 
-  const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+function downloadICS() {
+  if (!currentCalBtn) return;
+  const { date, name, orgname } = currentCalBtn.closest('.cal-wrap').dataset;
+  const blob = new Blob([buildICS(date, name, orgname)], { type: 'text/calendar;charset=utf-8' });
   const a    = document.createElement('a');
   a.href     = URL.createObjectURL(blob);
   a.download = `${name.replace(/\s+/g,'_')}_${date}.ics`;
   a.click();
   URL.revokeObjectURL(a.href);
+  closeCalPortal();
+}
+
+function openNativeCalendar() {
+  if (!currentCalBtn) return;
+  const { date, name, orgname } = currentCalBtn.closest('.cal-wrap').dataset;
+  const blob = new Blob([buildICS(date, name, orgname)], { type: 'text/calendar;charset=utf-8' });
+  const url  = URL.createObjectURL(blob);
+  // Navigate (no download attr) → iOS/Android prompts to open in Calendar app
+  window.location.href = url;
+  setTimeout(() => URL.revokeObjectURL(url), 10000);
   closeCalPortal();
 }
 </script>
@@ -834,6 +853,10 @@ function downloadICS() {
   <button class="cal-option" id="cal-ics-btn" onclick="downloadICS()">
     <span class="cal-option-icon cal-icon-ics">📥</span>
     <span class="cal-option-label">Stáhnout .ics<small>Apple, Outlook a další</small></span>
+  </button>
+  <button class="cal-option cal-option-mobile" id="cal-native-btn" onclick="openNativeCalendar()">
+    <span class="cal-option-icon cal-icon-native">📲</span>
+    <span class="cal-option-label">Přidat do kalendáře<small>Otevře nativní aplikaci</small></span>
   </button>
 </div>
 
